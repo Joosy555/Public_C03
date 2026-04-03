@@ -5,4 +5,4 @@
 
 snowflake-snowpark-python
 streamlit
-request
+requests
