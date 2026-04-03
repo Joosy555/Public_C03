@@ -8,9 +8,7 @@ from snowflake.snowpark.functions import col
 cnx = st.connection("snowflake")
 session = cnx.session()
 
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")  
-#st.text(smoothiefroot_response.json())
-sf_df = st.dataframe(data=smoothiefroot_response.json(),use_container_width=True)
+
 
 # Write directly to the app.
 st.title(f":cup_with_straw: Customize")
@@ -25,14 +23,12 @@ st.write(
 name_on_order = st.text_input ('Name on Smoothe:')
 
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
-#st.dataframe(data=my_dataframe, use_container_width=True)
 
 ingredients_list = st.multiselect(
      label = "What are your favorite fruits?"
     ,options = my_dataframe 
     ,max_selections = 5
 )
-
 
 ingredients_string = ''
 if ingredients_list:
@@ -41,8 +37,9 @@ if ingredients_list:
 
     for fruits_chosen in ingredients_list:
         ingredients_string += fruits_chosen + ' '
-
-    #st.write(ingredients_string)
+        st.subheader(fruits_chosen+' Nutrition information')
+        smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/"+fruits_chosen)  
+        sf_df = st.dataframe(data=smoothiefroot_response.json(),use_container_width=True)
 
     my_insert_stmt = """ insert into smoothies.public.orders(ingredients,name_on_order)
                     values ('""" + ingredients_string + """','""" + name_on_order + """')"""
