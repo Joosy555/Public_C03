@@ -19,7 +19,8 @@ st.write(
 
 name_on_order = st.text_input ('Name on Smoothe:')
 
-my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
+my_dataframe = session.table("smoothies.public.fruit_options")
+#.select(col('FRUIT_NAME'))
 #st.dataframe(data=my_dataframe, use_container_width=True)
 
 ingredients_list = st.multiselect(
